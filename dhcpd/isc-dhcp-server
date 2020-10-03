@@ -1,0 +1,5 @@
+DHCPDv4=/etc/dhcp/dhcpd.conf
+
+INTERFACESv4="eth2"
+# INTERFACESv6="eth2"
+
