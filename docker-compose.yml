@@ -1,0 +1,40 @@
+version: '3.7'
+
+volumes:
+  data:
+    driver: "local"
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.1.253,tcp,rw,nfsvers=4"
+      device: ":softether_data" 
+
+services:
+  vpn:
+    image: "192.168.1.253:5000/softether:latest"
+    volumes:
+      - type: volume
+        source: data
+        target: /mnt/vpnserver-conf.d
+    ports:
+      - target: 5555
+        published: 5555
+        protocol: tcp
+        mode: ingress
+      - target: 500
+        published: 500
+        protocol: udp
+        mode: ingress
+      - target: 4500
+        published: 4500
+        protocol: udp
+        mode: ingress
+    networks:
+      - vpn
+    deploy:
+      replicas: 1 
+      placement:
+        constraints:
+          - node.role == worker
+
+networks:
+  vpn:
